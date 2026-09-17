@@ -5,7 +5,8 @@ import type { Lead } from "@/types/lead";
 import type { Company } from "@/types/company";
 import type { Task } from "@/types/task";
 import type { Activity } from "@/types/activity";
-import { mockLeads, mockCompanies, mockTasks, mockActivities } from "@/lib/mock-data";
+import { mockTasks, mockActivities } from "@/lib/mock-data";
+import { seedLeads, seedCompanies } from "@/lib/seed-data";
 
 interface CrmState {
   leads: Lead[];
@@ -47,8 +48,8 @@ function nextCompanyId(companies: Company[]) {
 }
 
 export function CrmDataProvider({ children }: { children: React.ReactNode }) {
-  const [leads, setLeads] = useState<Lead[]>(mockLeads);
-  const [companies, setCompanies] = useState<Company[]>(mockCompanies);
+  const [leads, setLeads] = useState<Lead[]>(seedLeads);
+  const [companies, setCompanies] = useState<Company[]>(seedCompanies);
   const [tasks, setTasks] = useState<Task[]>(mockTasks);
   const [activities, setActivities] = useState<Activity[]>(mockActivities);
 

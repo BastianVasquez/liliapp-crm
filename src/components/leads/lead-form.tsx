@@ -46,7 +46,7 @@ const emptyForm = {
 };
 
 export function LeadForm({ open, onOpenChange, lead }: LeadFormProps) {
-  const { addLead, updateLead } = useCrm();
+  const { companies, addCompany, addLead, updateLead } = useCrm();
   const { showToast } = useToast();
   const isEdit = Boolean(lead);
 
@@ -103,9 +103,27 @@ export function LeadForm({ open, onOpenChange, lead }: LeadFormProps) {
       });
       showToast("Lead actualizado");
     } else {
+      const existingCompany = companies.find(
+        (c) => c.empresa.trim().toLowerCase() === form.empresa.trim().toLowerCase()
+      );
+      let empresaId = existingCompany?.empresa_id;
+      if (!empresaId) {
+        empresaId = `EMP-${Date.now()}`;
+        addCompany({
+          empresa_id: empresaId,
+          empresa: form.empresa,
+          pais: form.pais,
+          industria: "",
+          tipo_cliente: form.tipo_cliente,
+          potencial: "Medio",
+          responsable: form.responsable,
+          created_at: now,
+          updated_at: now,
+        });
+      }
       addLead({
         lead_id: "",
-        empresa_id: `EMP-${form.empresa.slice(0, 3).toUpperCase()}`,
+        empresa_id: empresaId,
         ...form,
         scoring: Number(form.scoring) || 0,
         ultimo_contacto: form.ultimo_contacto || undefined,

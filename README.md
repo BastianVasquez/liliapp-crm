@@ -2,7 +2,22 @@
 
 CRM comercial interno para LiLi (prospección de retailers y aseguradoras, pipeline, leads, empresas, actividades y tareas), construido con Next.js.
 
-## Estado actual — Fase 1 a 6 completadas
+## Datos reales migrados
+
+Ya no corre con datos de ejemplo: los **404 leads** y **492 empresas** reales de `Plantilla_SDR_LiLi.xlsx` (Chile, México, Argentina, Perú y Colombia) están cargados como semilla inicial en `src/lib/seed-data.ts` (desde `src/lib/data/seed-leads.json` y `seed-companies.json`).
+
+Algunas columnas de la planilla no calzaban 1:1 con el modelo del CRM, así que se transformaron así:
+
+- **Estado**: los emojis de la planilla (🟡 En seguimiento, 🟠 Negociación/Piloto, ❌ Cerrado perdido, 🔵 Enfríado, ✅ Cerrado ganado) se mapearon a Contactado / Negociación / Perdido / En pausa / Ganado. Sin estado pero con historial → Contactado; sin nada → Nuevo.
+- **Scoring**: la planilla no traía scoring — todos los leads migrados parten en 0 (el badge muestra "Sin score" en vez de un número rojo engañoso). Se va llenando desde la app.
+- **Tipo de Cliente**: la planilla mezclaba rubros (Muebles, Calefont, Griferías, etc.) — se guardó tal cual en `industria` de la empresa, y se mapeó a Retail/Seguros/Otro para el campo `tipo_cliente`.
+- **Próximo Contacto**: cuando la celda tenía texto en vez de una fecha (pasaba seguido), se movió a las notas del lead como "Próximo paso: …" en lugar de forzarlo como fecha.
+- **Empresas sin contacto**: 335 de las 492 empresas no tenían un nombre de contacto en la planilla — quedaron como empresa (para prospectar) pero sin lead asociado todavía.
+- **Responsable**: se normalizó todo a "Bastián" (había variaciones como " Bastián", "Bastian" sin tilde).
+
+Dado el volumen, agregué paginación (50 leads / 30 empresas por página) a esas dos vistas para que no se vuelvan lentas.
+
+## Estado actual — Fase 1 a 6 completadas + datos reales migrados
 
 - [x] Setup Next.js (App Router) + TypeScript + Tailwind CSS v4
 - [x] Identidad visual LiLi (morado #714DBF / #5A2EA6, fondo #EAECF6, Poppins)

@@ -17,6 +17,8 @@ export function CompanyList() {
   const { showToast } = useToast();
 
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 30;
   const [formOpen, setFormOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | undefined>(undefined);
   const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
@@ -29,6 +31,10 @@ export function CompanyList() {
       (c) => c.empresa.toLowerCase().includes(q) || c.industria.toLowerCase().includes(q)
     );
   }, [companies, query]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   function openCreate() {
     setEditingCompany(undefined);
@@ -48,7 +54,10 @@ export function CompanyList() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <Input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
             placeholder="Buscar por empresa o industria…"
             className="pl-9"
           />
@@ -73,7 +82,7 @@ export function CompanyList() {
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((company) => {
+          {paginated.map((company) => {
             const contactCount = leads.filter((l) => l.empresa_id === company.empresa_id).length;
             return (
               <div key={company.empresa_id} className="relative rounded-2xl border border-border bg-surface p-5">
@@ -135,6 +144,42 @@ export function CompanyList() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {filtered.length > 0 && (
+        <div className="mt-3 flex items-center justify-between text-xs text-muted">
+          <span>
+            {filtered.length} empresa{filtered.length === 1 ? "" : "s"}
+            {filtered.length > PAGE_SIZE &&
+              ` · mostrando ${(currentPage - 1) * PAGE_SIZE + 1}–${Math.min(
+                currentPage * PAGE_SIZE,
+                filtered.length
+              )}`}
+          </span>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </Button>
+              <span>
+                Página {currentPage} de {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Siguiente
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

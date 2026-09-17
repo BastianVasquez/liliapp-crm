@@ -71,7 +71,7 @@ export function PipelineBoard() {
                 <h3 className="text-sm font-semibold text-foreground">{status}</h3>
                 <span className="text-xs text-muted">{columnLeads.length}</span>
               </div>
-              <div className="mt-1 flex flex-1 flex-col gap-2 min-h-[60px]">
+              <div className="mt-1 flex max-h-[70vh] flex-1 flex-col gap-2 overflow-y-auto min-h-[60px] pr-0.5">
                 {columnLeads.map((lead) => (
                   <LeadCard
                     key={lead.lead_id}

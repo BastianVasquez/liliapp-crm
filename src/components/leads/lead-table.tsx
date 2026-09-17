@@ -29,6 +29,8 @@ export function LeadTable() {
   const [tipoCliente, setTipoCliente] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("scoring");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 50;
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | undefined>(undefined);
@@ -65,6 +67,10 @@ export function LeadTable() {
 
     return result;
   }, [leads, query, pais, estado, tipoCliente, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) {
@@ -107,12 +113,22 @@ export function LeadTable() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <Input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
             placeholder="Buscar por nombre, empresa, email o teléfono…"
             className="pl-9"
           />
         </div>
-        <Select value={pais} onChange={(e) => setPais(e.target.value)} className="w-auto min-w-[140px]">
+        <Select
+          value={pais}
+          onChange={(e) => {
+            setPais(e.target.value);
+            setPage(1);
+          }}
+          className="w-auto min-w-[140px]"
+        >
           <option value="">Todos los países</option>
           {COUNTRIES.map((c) => (
             <option key={c} value={c}>
@@ -120,7 +136,14 @@ export function LeadTable() {
             </option>
           ))}
         </Select>
-        <Select value={estado} onChange={(e) => setEstado(e.target.value)} className="w-auto min-w-[150px]">
+        <Select
+          value={estado}
+          onChange={(e) => {
+            setEstado(e.target.value);
+            setPage(1);
+          }}
+          className="w-auto min-w-[150px]"
+        >
           <option value="">Todos los estados</option>
           {LEAD_STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -130,7 +153,10 @@ export function LeadTable() {
         </Select>
         <Select
           value={tipoCliente}
-          onChange={(e) => setTipoCliente(e.target.value)}
+          onChange={(e) => {
+            setTipoCliente(e.target.value);
+            setPage(1);
+          }}
           className="w-auto min-w-[150px]"
         >
           <option value="">Todos los tipos</option>
@@ -182,7 +208,7 @@ export function LeadTable() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((lead) => (
+              {paginated.map((lead) => (
                 <tr key={lead.lead_id} className="border-b border-border last:border-0 hover:bg-background/60">
                   <td className="px-4 py-3">
                     <Link href={`/leads/${lead.lead_id}`} className="font-medium text-foreground hover:underline">
@@ -247,6 +273,42 @@ export function LeadTable() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {filtered.length > 0 && (
+        <div className="mt-3 flex items-center justify-between text-xs text-muted">
+          <span>
+            {filtered.length} lead{filtered.length === 1 ? "" : "s"}
+            {filtered.length > PAGE_SIZE &&
+              ` · mostrando ${(currentPage - 1) * PAGE_SIZE + 1}–${Math.min(
+                currentPage * PAGE_SIZE,
+                filtered.length
+              )}`}
+          </span>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </Button>
+              <span>
+                Página {currentPage} de {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Siguiente
+              </Button>
+            </div>
+          )}
         </div>
       )}
 
