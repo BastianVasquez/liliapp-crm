@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+:root {
+  --background: #eaecf6;
+  --surface: #ffffff;
+  --foreground: #1d1b2e;
+  --muted: #6b6884;
+
+  --lili-purple: #714dbf;
+  --lili-purple-dark: #5a2ea6;
+  --lili-purple-soft: #efecfb;
+
+  --border: #dfe1ef;
+
+  --success: #1f9d55;
+  --success-soft: #e4f8ec;
+  --warning: #b7791f;
+  --warning-soft: #fdf3e2;
+  --danger: #d43f5f;
+  --danger-soft: #fbe7ec;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+
+  --color-lili-purple: var(--lili-purple);
+  --color-lili-purple-dark: var(--lili-purple-dark);
+  --color-lili-purple-soft: var(--lili-purple-soft);
+
+  --color-border: var(--border);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+* {
+  border-color: var(--border);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9cbe0;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
