@@ -2,7 +2,7 @@
 
 CRM comercial interno para LiLi (prospección de retailers y aseguradoras, pipeline, leads, empresas, actividades y tareas), construido con Next.js.
 
-## Estado actual — Fase 1, 2, 3 y 4 completadas
+## Estado actual — Fase 1 a 5 completadas
 
 - [x] Setup Next.js (App Router) + TypeScript + Tailwind CSS v4
 - [x] Identidad visual LiLi (morado #714DBF / #5A2EA6, fondo #EAECF6, Poppins)
@@ -15,8 +15,8 @@ CRM comercial interno para LiLi (prospección de retailers y aseguradoras, pipel
 - [x] Detalle de Lead: info principal, info comercial, seguimiento, historial (timeline), registrar actividad, crear tarea, cambiar estado — con las 3 acciones de IA visibles y deshabilitadas
 - [x] Pipeline: Kanban con las 10 columnas de estado, drag & drop, feedback "Guardando… / Guardado", actualización optimista
 - [x] Empresas: listado con búsqueda, crear/editar/eliminar; detalle con info de la empresa, contactos (leads asociados), actividad reciente y oportunidades
+- [x] Actividades: historial global con filtro por tipo (Email/WhatsApp/Llamada/Reunión/LinkedIn/Nota/Otro) y registro de nueva actividad eligiendo el lead
 - [x] Toasts para crear/editar/eliminar lead o empresa, registrar actividad, crear tarea
-- [ ] Vista de Actividades (todas, no solo por lead) — Fase 5
 - [ ] Vista de Tareas (Hoy / Vencidas / Próximas) — Fase 6
 - [ ] Integración real con Google Sheets vía Apps Script — Fase 8
 
