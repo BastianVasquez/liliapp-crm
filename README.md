@@ -2,23 +2,23 @@
 
 CRM comercial interno para LiLi (prospección de retailers y aseguradoras, pipeline, leads, empresas, actividades y tareas), construido con Next.js.
 
-## Estado actual — Fase 1 a 5 completadas
+## Estado actual — Fase 1 a 6 completadas
 
 - [x] Setup Next.js (App Router) + TypeScript + Tailwind CSS v4
 - [x] Identidad visual LiLi (morado #714DBF / #5A2EA6, fondo #EAECF6, Poppins)
 - [x] Sidebar responsive (fijo en desktop, drawer en mobile) + Topbar
 - [x] Navegación a las 8 secciones: Dashboard, Pipeline, Leads, Empresas, Tareas, Actividades, LiLi AI, Configuración
 - [x] Tipos TypeScript (`Lead`, `Company`, `Activity`, `Task`, `User`) según el esquema de Google Sheets objetivo
-- [x] Dashboard con KPIs, tareas de hoy, resumen de pipeline y actividad reciente
+- [x] Dashboard con KPIs, tareas de hoy (completables), resumen de pipeline y actividad reciente
 - [x] Sección LiLi AI visible con las 5 funcionalidades marcadas "Próximamente" — sin ninguna llamada a IA
 - [x] Tabla de Leads: búsqueda, filtros (país/estado/tipo cliente), orden por columna, crear/editar/eliminar
 - [x] Detalle de Lead: info principal, info comercial, seguimiento, historial (timeline), registrar actividad, crear tarea, cambiar estado — con las 3 acciones de IA visibles y deshabilitadas
 - [x] Pipeline: Kanban con las 10 columnas de estado, drag & drop, feedback "Guardando… / Guardado", actualización optimista
 - [x] Empresas: listado con búsqueda, crear/editar/eliminar; detalle con info de la empresa, contactos (leads asociados), actividad reciente y oportunidades
-- [x] Actividades: historial global con filtro por tipo (Email/WhatsApp/Llamada/Reunión/LinkedIn/Nota/Otro) y registro de nueva actividad eligiendo el lead
-- [x] Toasts para crear/editar/eliminar lead o empresa, registrar actividad, crear tarea
-- [ ] Vista de Tareas (Hoy / Vencidas / Próximas) — Fase 6
-- [ ] Integración real con Google Sheets vía Apps Script — Fase 8
+- [x] Actividades: historial global con filtro por tipo y registro de nueva actividad eligiendo el lead
+- [x] Tareas: secciones Vencidas / Hoy / Próximas, prioridad, responsable, marcar como completada, crear tarea con o sin lead asociado
+- [x] Toasts para crear/editar/eliminar lead o empresa, registrar actividad, crear/completar tarea
+- [ ] Integración real con Google Sheets vía Apps Script — Fase 8 (Fase 7, Dashboard, ya quedó cubierta desde la Fase 1)
 
 ## Dónde viven los datos hoy (importante)
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,22 +12,33 @@ import { useToast } from "@/components/providers/toast-provider";
 import { TASK_PRIORITIES } from "@/types/task";
 import type { Lead } from "@/types/lead";
 
+const RESPONSABLES = ["Bastián", "Alejandro"];
+
 interface TaskFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   lead?: Lead;
 }
 
-export function TaskForm({ open, onOpenChange, lead }: TaskFormProps) {
-  const { addTask } = useCrm();
+export function TaskForm({ open, onOpenChange, lead: fixedLead }: TaskFormProps) {
+  const { leads, addTask } = useCrm();
   const { showToast } = useToast();
 
+  const [selectedLeadId, setSelectedLeadId] = useState(fixedLead?.lead_id ?? "");
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fechaVencimiento, setFechaVencimiento] = useState(() =>
     new Date().toISOString().slice(0, 10)
   );
   const [prioridad, setPrioridad] = useState<(typeof TASK_PRIORITIES)[number]>("Media");
+  const [responsable, setResponsable] = useState(fixedLead?.responsable ?? RESPONSABLES[0]);
+
+  const lead = fixedLead ?? leads.find((l) => l.lead_id === selectedLeadId);
+
+  const leadOptions = useMemo(
+    () => leads.map((l) => ({ id: l.lead_id, label: `${l.nombre} — ${l.empresa}` })),
+    [leads]
+  );
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,7 +53,7 @@ export function TaskForm({ open, onOpenChange, lead }: TaskFormProps) {
       fecha_vencimiento: new Date(fechaVencimiento).toISOString(),
       prioridad,
       estado: "Pendiente",
-      responsable: lead?.responsable ?? "Bastián",
+      responsable,
       created_at: new Date().toISOString(),
     });
     showToast("Tarea creada");
@@ -68,6 +79,28 @@ export function TaskForm({ open, onOpenChange, lead }: TaskFormProps) {
               onChange={(e) => setDescripcion(e.target.value)}
             />
           </div>
+
+          {fixedLead ? (
+            <div>
+              <Label>Lead</Label>
+              <p className="text-sm text-foreground">
+                {fixedLead.nombre} — {fixedLead.empresa}
+              </p>
+            </div>
+          ) : (
+            <div>
+              <Label htmlFor="task-lead">Lead (opcional)</Label>
+              <Select id="task-lead" value={selectedLeadId} onChange={(e) => setSelectedLeadId(e.target.value)}>
+                <option value="">Sin lead asociado</option>
+                {leadOptions.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="task-fecha">Fecha de vencimiento</Label>
@@ -93,6 +126,18 @@ export function TaskForm({ open, onOpenChange, lead }: TaskFormProps) {
               </Select>
             </div>
           </div>
+
+          <div>
+            <Label htmlFor="task-responsable">Responsable</Label>
+            <Select id="task-responsable" value={responsable} onChange={(e) => setResponsable(e.target.value)}>
+              {RESPONSABLES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </Select>
+          </div>
+
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
               Cancelar

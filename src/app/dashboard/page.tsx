@@ -7,9 +7,11 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { formatDate } from "@/lib/utils";
 import { LEAD_STATUSES } from "@/types/lead";
 import { useCrm } from "@/lib/store";
+import { useToast } from "@/components/providers/toast-provider";
 
 export default function DashboardPage() {
-  const { leads, tasks, activities } = useCrm();
+  const { leads, tasks, activities, completeTask } = useCrm();
+  const { showToast } = useToast();
 
   const total = leads.length;
   const activos = leads.filter((l) => !["Ganado", "Perdido"].includes(l.estado)).length;
@@ -55,7 +57,15 @@ export default function DashboardPage() {
             <ul className="mt-4 space-y-3">
               {pendingTasks.map((task) => (
                 <li key={task.task_id} className="flex items-start gap-3">
-                  <span className="mt-0.5 h-4.5 w-4.5 shrink-0 rounded-md border border-border" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      completeTask(task.task_id);
+                      showToast("Tarea completada");
+                    }}
+                    className="mt-0.5 h-4.5 w-4.5 shrink-0 rounded-md border border-border hover:border-lili-purple"
+                    aria-label="Completar tarea"
+                  />
                   <div className="min-w-0">
                     <p className="truncate text-sm text-foreground">{task.titulo}</p>
                     <p className="text-xs text-muted">
