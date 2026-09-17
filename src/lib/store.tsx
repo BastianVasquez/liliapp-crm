@@ -18,6 +18,9 @@ interface CrmActions {
   addLead: (lead: Lead) => void;
   updateLead: (leadId: string, patch: Partial<Lead>) => void;
   deleteLead: (leadId: string) => void;
+  addCompany: (company: Company) => void;
+  updateCompany: (empresaId: string, patch: Partial<Company>) => void;
+  deleteCompany: (empresaId: string) => void;
   addTask: (task: Task) => void;
   completeTask: (taskId: string) => void;
   addActivity: (activity: Activity) => void;
@@ -35,9 +38,17 @@ function nextLeadId(leads: Lead[]) {
   return `LILI-${String(max + 1).padStart(4, "0")}`;
 }
 
+function nextCompanyId(companies: Company[]) {
+  const max = companies.reduce((acc, company) => {
+    const n = Number(company.empresa_id.replace("EMP-", ""));
+    return Number.isFinite(n) && n > acc ? n : acc;
+  }, 0);
+  return `EMP-${String(max + 1).padStart(4, "0")}`;
+}
+
 export function CrmDataProvider({ children }: { children: React.ReactNode }) {
   const [leads, setLeads] = useState<Lead[]>(mockLeads);
-  const [companies] = useState<Company[]>(mockCompanies);
+  const [companies, setCompanies] = useState<Company[]>(mockCompanies);
   const [tasks, setTasks] = useState<Task[]>(mockTasks);
   const [activities, setActivities] = useState<Activity[]>(mockActivities);
 
@@ -57,6 +68,27 @@ export function CrmDataProvider({ children }: { children: React.ReactNode }) {
 
   const deleteLead = useCallback((leadId: string) => {
     setLeads((prev) => prev.filter((lead) => lead.lead_id !== leadId));
+  }, []);
+
+  const addCompany = useCallback((company: Company) => {
+    setCompanies((prev) => [
+      { ...company, empresa_id: company.empresa_id || nextCompanyId(prev) },
+      ...prev,
+    ]);
+  }, []);
+
+  const updateCompany = useCallback((empresaId: string, patch: Partial<Company>) => {
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.empresa_id === empresaId
+          ? { ...company, ...patch, updated_at: new Date().toISOString() }
+          : company
+      )
+    );
+  }, []);
+
+  const deleteCompany = useCallback((empresaId: string) => {
+    setCompanies((prev) => prev.filter((company) => company.empresa_id !== empresaId));
   }, []);
 
   const addTask = useCallback((task: Task) => {
@@ -93,11 +125,28 @@ export function CrmDataProvider({ children }: { children: React.ReactNode }) {
       addLead,
       updateLead,
       deleteLead,
+      addCompany,
+      updateCompany,
+      deleteCompany,
       addTask,
       completeTask,
       addActivity,
     }),
-    [leads, companies, tasks, activities, addLead, updateLead, deleteLead, addTask, completeTask, addActivity]
+    [
+      leads,
+      companies,
+      tasks,
+      activities,
+      addLead,
+      updateLead,
+      deleteLead,
+      addCompany,
+      updateCompany,
+      deleteCompany,
+      addTask,
+      completeTask,
+      addActivity,
+    ]
   );
 
   return <CrmContext.Provider value={value}>{children}</CrmContext.Provider>;
