@@ -2,23 +2,30 @@
 
 CRM comercial interno para LiLi (prospección de retailers y aseguradoras, pipeline, leads, empresas, actividades y tareas), construido con Next.js.
 
-## Estado actual — Fase 1 completada
+## Estado actual — Fase 1 y Fase 2 completadas
 
 - [x] Setup Next.js (App Router) + TypeScript + Tailwind CSS v4
 - [x] Identidad visual LiLi (morado #714DBF / #5A2EA6, fondo #EAECF6, Poppins)
 - [x] Sidebar responsive (fijo en desktop, drawer en mobile) + Topbar
 - [x] Navegación a las 8 secciones: Dashboard, Pipeline, Leads, Empresas, Tareas, Actividades, LiLi AI, Configuración
 - [x] Tipos TypeScript (`Lead`, `Company`, `Activity`, `Task`, `User`) según el esquema de Google Sheets objetivo
-- [x] Dashboard con KPIs, tareas de hoy, resumen de pipeline y actividad reciente (datos de ejemplo)
+- [x] Dashboard con KPIs, tareas de hoy, resumen de pipeline y actividad reciente
 - [x] Sección LiLi AI visible con las 5 funcionalidades marcadas "Próximamente" — sin ninguna llamada a IA
+- [x] Tabla de Leads: búsqueda, filtros (país/estado/tipo cliente), orden por columna, crear/editar/eliminar
+- [x] Detalle de Lead: info principal, info comercial, seguimiento, historial (timeline), registrar actividad, crear tarea, cambiar estado — con las 3 acciones de IA visibles y deshabilitadas
+- [x] Toasts para crear/editar/eliminar lead, registrar actividad, crear tarea
 - [ ] Pipeline (Kanban con drag & drop) — Fase 3
-- [ ] Tabla y detalle de Leads — Fase 2
 - [ ] Empresas y contactos — Fase 4
-- [ ] Actividades (timeline) — Fase 5
-- [ ] Tareas — Fase 6
+- [ ] Vista de Actividades (todas, no solo por lead) — Fase 5
+- [ ] Vista de Tareas (Hoy / Vencidas / Próximas) — Fase 6
 - [ ] Integración real con Google Sheets vía Apps Script — Fase 8
 
-Todos los datos que se ven hoy en el Dashboard son mock (`src/lib/mock-data.ts`), con nombres reales de la planilla comercial (Sodimac, Cencosud, Walmart, Southbridge) para que la UI se sienta representativa. Se reemplazan por la integración real en la Fase 8.
+## Dónde viven los datos hoy (importante)
+
+Todavía no hay integración con Google Sheets (eso es la Fase 8). Mientras tanto, los datos viven **en memoria del navegador**, en un store de React (`src/lib/store.tsx`) sembrado con datos de ejemplo (`src/lib/mock-data.ts`, con nombres reales de la planilla: Sodimac, Cencosud, Walmart, Southbridge). Esto significa:
+
+- Crear, editar o eliminar un lead, registrar una actividad o crear una tarea **sí funciona** y se refleja al instante en Dashboard, Leads y el detalle del lead.
+- Si recargas la página, los cambios se pierden (vuelve a los datos de ejemplo) — normal, hasta que conectemos Sheets en la Fase 8.
 
 ## Cómo instalar y correr localmente
 
